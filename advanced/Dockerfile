@@ -326,6 +326,71 @@ RUN touch /run/php-fpm.sock \
 
 WORKDIR /var/www/web
 
+ARG APCU_VERSION=5.1.18
+ARG APCU_BC_VERSION=1.0.5
+
+ENV MEMCACHED_DEPS zlib-dev libmemcached-dev cyrus-sasl-dev curl
+
+RUN mkdir /usr/src/php \
+    && apk add libmemcached \
+    && apk add --no-cache \
+        freetype \
+        libjpeg-turbo \
+        libpng \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+    && docker-php-ext-configure gd \
+        --with-freetype-dir=/usr/include/ \
+        --with-png-dir=/usr/include/ \
+        --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j5 gd \
+    && apk del --no-cache \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+    && apk add --no-cache \
+        postgresql-dev \
+        icu \
+        icu-dev \
+    && docker-php-ext-install -j5 \
+#        mbstring \
+        pdo_mysql \
+        pgsql \
+        pdo_pgsql \
+        intl \
+        opcache \
+#    && apk del --no-cache \
+#        postgresql-dev \
+#        icu-dev \
+    && apk add --no-cache \
+         --virtual .memcached-deps \
+        $MEMCACHED_DEPS \
+		$PHPIZE_DEPS \
+    && curl https://codeload.github.com/php-memcached-dev/php-memcached/zip/php7 -o /tmp/memcached.zip \
+    && mkdir -p /usr/src/php/ext \
+    && unzip /tmp/memcached.zip -d /usr/src/php/ext \
+    && docker-php-ext-configure /usr/src/php/ext/php-memcached-php7 \
+     --disable-memcached-sasl \
+    && docker-php-ext-install /usr/src/php/ext/php-memcached-php7 \
+    && rm -rf /usr/src/php/ext/php-memcached-php7 /tmp/memcached.zip \
+    && apk add --no-cache --virtual .imagemagick-edge \
+                --repository http://dl-3.alpinelinux.org/alpine/v3.6/main/ \
+                --allow-untrusted \
+            imagemagick \
+            imagemagick-dev \
+    && pecl install \
+#        apc \
+        imagick-3.4.3 \
+        apcu-$APCU_VERSION \
+        apcu_bc-$APCU_BC_VERSION \
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-enable apcu \
+    && docker-php-ext-enable apc \
+#    && apk del .imagemagick-edge \
+    && apk del .memcached-deps \
+    && rm -rf /tmp/*
+
 USER nginx:www-data
 
 ENTRYPOINT ["/init"]
