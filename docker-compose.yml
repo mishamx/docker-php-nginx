@@ -3,8 +3,10 @@ services:
   app:
     build:
       context: .
-#      dockerfile: Dockerfile
-      dockerfile: ./advanced/Dockerfile
+      dockerfile: Dockerfile
+#      dockerfile: ./advanced/Dockerfile
+    environment:
+      APP_HOSTNAME: 'app'
     ports:
     - "8080:80"
     volumes:
