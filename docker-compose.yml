@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
 #      dockerfile: ./advanced/Dockerfile
+#      dockerfile: ./builder/Dockerfile
     environment:
       APP_HOSTNAME: 'app'
     ports:
