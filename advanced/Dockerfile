@@ -326,9 +326,6 @@ RUN touch /run/php-fpm.sock \
 
 WORKDIR /var/www/web
 
-ARG APCU_VERSION=5.1.18
-ARG APCU_BC_VERSION=1.0.5
-
 ENV MEMCACHED_DEPS zlib-dev libmemcached-dev cyrus-sasl-dev curl
 
 RUN mkdir /usr/src/php \
@@ -380,13 +377,8 @@ RUN mkdir /usr/src/php \
             imagemagick \
             imagemagick-dev \
     && pecl install \
-#        apc \
         imagick-3.4.3 \
-        apcu-$APCU_VERSION \
-        apcu_bc-$APCU_BC_VERSION \
     && docker-php-ext-enable imagick \
-    && docker-php-ext-enable apcu \
-    && docker-php-ext-enable apc \
 #    && apk del .imagemagick-edge \
     && apk del .memcached-deps \
     && rm -rf /tmp/*
