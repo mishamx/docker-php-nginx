@@ -376,9 +376,12 @@ RUN mkdir /usr/src/php \
                 --allow-untrusted \
             imagemagick \
             imagemagick-dev \
+            rabbitmq-c rabbitmq-c-dev \
     && pecl install \
         imagick-3.4.3 \
+        amqp \
     && docker-php-ext-enable imagick \
+    && docker-php-ext-enable amqp \
 #    && apk del .imagemagick-edge \
     && apk del .memcached-deps \
     && rm -rf /tmp/*

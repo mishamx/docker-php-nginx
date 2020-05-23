@@ -3,8 +3,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
-#      dockerfile: ./advanced/Dockerfile
+#      dockerfile: Dockerfile
+      dockerfile: ./advanced/Dockerfile
 #      dockerfile: ./builder/Dockerfile
     environment:
       APP_HOSTNAME: 'app'
