@@ -180,11 +180,11 @@ ENV PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_
 ENV PHP_CPPFLAGS="$PHP_CFLAGS"
 ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
-ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F
+ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F 5A52880781F755608BF815FC910DEB46F53EA312
 
-ENV PHP_VERSION 7.2.30
-ENV PHP_URL="https://www.php.net/get/php-7.2.30.tar.xz/from/this/mirror" PHP_ASC_URL="https://www.php.net/get/php-7.2.30.tar.xz.asc/from/this/mirror"
-ENV PHP_SHA256="aa93df27b58a45d6c9800ac813245dfdca03490a918ebe515b3a70189b1bf8c3" PHP_MD5=""
+ENV PHP_VERSION 7.4.9
+ENV PHP_URL="https://www.php.net/get/php-7.4.9.tar.xz/from/this/mirror" PHP_ASC_URL="https://www.php.net/get/php-7.4.9.tar.xz.asc/from/this/mirror"
+ENV PHP_SHA256="23733f4a608ad1bebdcecf0138ebc5fd57cf20d6e0915f98a9444c3f747dc57b" PHP_MD5=""
 
 RUN set -eux; \
 	\
@@ -224,6 +224,7 @@ RUN set -eux; \
 		curl-dev \
 		libedit-dev \
 		libsodium-dev \
+		oniguruma-dev \
 		libxml2-dev \
 		openssl-dev \
 		sqlite-dev \
@@ -294,8 +295,6 @@ RUN set -eux; \
 	\
 	apk del --no-network .build-deps; \
 	\
-# update pecl channel definitions https://github.com/docker-library/php/issues/443
-	pecl update-channels; \
 	rm -rf /tmp/pear ~/.pearrc; \
 # smoke test
 	php --version
