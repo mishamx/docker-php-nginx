@@ -180,11 +180,11 @@ ENV PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_
 ENV PHP_CPPFLAGS="$PHP_CFLAGS"
 ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
-ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F CBAF69F173A0FEA4B537F470D66C9593118BCCB6
+ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 B1B44D8F021E4E2D6021E995DC9FF8D3EE5AF27F 5A52880781F755608BF815FC910DEB46F53EA312
 
-ENV PHP_VERSION 7.3.21
-ENV PHP_URL="https://www.php.net/get/php-7.3.21.tar.xz/from/this/mirror" PHP_ASC_URL="https://www.php.net/get/php-7.3.21.tar.xz.asc/from/this/mirror"
-ENV PHP_SHA256="4c8b065746ef776d84b7ae47908c21a79e3d4704b86b60d816716b8697c58ce9" PHP_MD5=""
+ENV PHP_VERSION 7.4.9
+ENV PHP_URL="https://www.php.net/get/php-7.4.9.tar.xz/from/this/mirror" PHP_ASC_URL="https://www.php.net/get/php-7.4.9.tar.xz.asc/from/this/mirror"
+ENV PHP_SHA256="23733f4a608ad1bebdcecf0138ebc5fd57cf20d6e0915f98a9444c3f747dc57b" PHP_MD5=""
 
 RUN set -eux; \
 	\
@@ -224,6 +224,7 @@ RUN set -eux; \
 		curl-dev \
 		libedit-dev \
 		libsodium-dev \
+		oniguruma-dev \
 		libxml2-dev \
 		openssl-dev \
 		sqlite-dev \
@@ -265,6 +266,7 @@ RUN set -eux; \
 		--with-libedit \
 		--with-openssl \
 		--with-zlib \
+		--with-pear \
 		\
 # bundled pcre does not support JIT on s390x
 # https://manpages.debian.org/stretch/libpcre3-dev/pcrejit.3.en.html#AVAILABILITY_OF_JIT_SUPPORT
@@ -294,8 +296,6 @@ RUN set -eux; \
 	\
 	apk del --no-network .build-deps; \
 	\
-# update pecl channel definitions https://github.com/docker-library/php/issues/443
-	pecl update-channels; \
 	rm -rf /tmp/pear ~/.pearrc; \
 # smoke test
 	php --version
@@ -338,9 +338,8 @@ RUN mkdir /usr/src/php \
         libjpeg-turbo-dev \
         libpng-dev \
     && docker-php-ext-configure gd \
-        --with-freetype-dir=/usr/include/ \
-        --with-png-dir=/usr/include/ \
-        --with-jpeg-dir=/usr/include/ \
+        --with-freetype \
+        --with-jpeg \
     && docker-php-ext-install -j5 gd \
     && apk del --no-cache \
         freetype-dev \
