@@ -364,13 +364,14 @@ RUN mkdir /usr/src/php \
          --virtual .memcached-deps \
         $MEMCACHED_DEPS \
 		$PHPIZE_DEPS \
-    && curl https://codeload.github.com/php-memcached-dev/php-memcached/zip/php7 -o /tmp/memcached.zip \
+    && curl https://codeload.github.com/php-memcached-dev/php-memcached/zip/v3.1.5 -o /tmp/memcached.zip \
     && mkdir -p /usr/src/php/ext \
-    && unzip /tmp/memcached.zip -d /usr/src/php/ext \
+    && unzip /tmp/memcached.zip -d /tmp \
+    && mv /tmp/php-memcached-3.1.5 /usr/src/php/ext/php-memcached-php7 \
     && docker-php-ext-configure /usr/src/php/ext/php-memcached-php7 \
      --disable-memcached-sasl \
     && docker-php-ext-install /usr/src/php/ext/php-memcached-php7 \
-    && rm -rf /usr/src/php/ext/php-memcached-php7 /tmp/memcached.zip \
+    && rm -rf /tmp/php-memcached-3.1.5 /tmp/memcached.zip \
     && apk add --no-cache --virtual .imagemagick-edge \
                 --repository http://dl-3.alpinelinux.org/alpine/v3.6/main/ \
                 --allow-untrusted \
